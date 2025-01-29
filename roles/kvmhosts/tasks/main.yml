@@ -1,0 +1,23 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for kvmhosts
+
+
+- name: Copy template to KVM hosts
+  ansible.builtin.template:
+    src: basic_info.j2
+    dest: /tmp/basic_info.txt
+- name: Check RPMs
+  ansible.builtin.shell:
+    cmd: /usr/bin/rpm -qa | egrep "kvm|qemu|vdsm" | awk '{print $1}'
+  register: rpm_list
+- name: Fill in RPMs Info
+  ansible.builtin.blockinfile:
+    path: /tmp/basic_info.txt
+    insertafter: '^[RPMs]'
+    marker: ""
+    block: "{{ rpm_list.stdout }}"
+- name: Fetch Basic Info
+  ansible.builtin.fetch:
+    src: /tmp/basic_info.txt
+    dest: /tmp/{{ ansible_date_time.date }}-{{ inventory_hostname }}

@@ -1,0 +1,30 @@
+[Hardware Info]
+Hardware_Model = {{ ansible_facts['chassis_vendor'] }} {{ ansible_facts['chassis_version'] }}
+BIOS_Version = {{ ansible_facts['bios_vendor'] }} Version {{ ansible_facts['bios_version'] }}
+Architecture = {{ ansible_facts['machine'] }}
+
+[OS Basic Info]
+Hostname = {{ ansible_facts['fqdn'] }}
+Domain = {{ ansible_facts['domain'] }}
+Distribution = {{ ansible_facts['distribution_file_variety'] }}
+OS_Version =  {{ ansible_facts['distribution_version'] }}
+Virtualization_Type = {{ ansible_facts['virtualization_tech_host'] }}
+
+[CPU/Memory Info] 
+CPU_Socket(s) = {{ ansible_facts['processor_count'] }}
+CPU_Cores_per_Socket = {{ ansible_facts['processor_cores'] }}
+Intel_Hyperthreading = {% if ansible_facts['processor_threads_per_core'] == 2 %} Enabled {% else %} Not Enabled {% endif %}{{''}}
+Cstate_intel_idle.max_cstate = {{ ansible_facts['cmdline']['intel_idle.max_cstate'] }}
+Cstate_processor.max_cstate = {{ ansible_facts['cmdline']['processor.max_cstate'] }}
+Memory = {{ ansible_facts['memtotal_mb'] }} MB
+
+[SELinux]
+Status = {{ ansible_facts['selinux']['status'] }}
+Mode = {{ ansible_facts['selinux']['config_mode'] }}
+
+
+[ovirtmgmt Network]
+Active_tatus = {% if ansible_facts['ovirtmgmt'] is defined %} {{  ansible_facts['ovirtmgmt'].active }} {% else %} Not Exist! {% endif %}{{''}}
+
+[RPMs]
+
